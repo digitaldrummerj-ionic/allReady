@@ -15,7 +15,7 @@ var fse  = require("fs-extra");
 var path = require("path");
 
 // constants
-var BOWER_DIR           = "bower_components"; // created by bower
+var BOWER_DIR           = "www/lib"; // created by bower
 var LIB_DIR             = "www/lib"; // created by this script
 var LIB_DIR_PERMISSIONS = parseInt("774", 8); // rwxrwxr-x
 

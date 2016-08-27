@@ -1,11 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.ionicframework.allreadymobile158098" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.htbox.allready" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>allReady</name>
   <description>allReady brings together community members, volunteers, humanitarian and community organizations to make our communities more resilient to the effects of disasters by making preparedness activities more visible and effective to the communities they serve and the volunteers who support them.</description>
   <author email="contact@htbox.org" href="http://htbox.org">Humanitarian Toolbox</author>
   <content src="index.html" />
   <access origin="*" />
-  <hook src="scripts/bowerCopy.js" type="before_prepare" />
   <preference name="webviewbounce" value="false" />
   <preference name="UIWebViewBounce" value="false" />
   <preference name="DisallowOverscroll" value="true" />
