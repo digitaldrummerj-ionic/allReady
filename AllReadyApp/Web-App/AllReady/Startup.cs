@@ -27,6 +27,7 @@ using Newtonsoft.Json.Serialization;
 using Geocoding;
 using Geocoding.Google;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace AllReady
@@ -63,6 +64,17 @@ namespace AllReady
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            // Add CORS support   
+            var corsBuilder = new CorsPolicyBuilder();
+            corsBuilder.AllowAnyHeader();
+            corsBuilder.AllowAnyMethod();
+            corsBuilder.AllowAnyOrigin();
+            corsBuilder.AllowCredentials();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("allReady", corsBuilder.Build());
+            });
+
             // Add Application Insights data collection services to the services container.
             services.AddApplicationInsightsTelemetry(Configuration);
 
@@ -76,16 +88,6 @@ namespace AllReady
             services.Configure<GeneralSettings>(Configuration.GetSection("General"));
             services.Configure<TwitterAuthenticationSettings>(Configuration.GetSection("Authentication:Twitter"));
 
-            // Add CORS support
-            services.AddCors(options =>
-            {
-                options.AddPolicy("allReady", builder => builder
-                    .AllowAnyOrigin()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials()
-                );
-            });
 
             // Add Identity services to the services container.
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -108,13 +110,7 @@ namespace AllReady
 
             // Add MVC services to the services container.
             // config add to get passed Angular failing on Options request when logging in.
-            services.AddMvc(config =>
-                {
-                    var policy = new AuthorizationPolicyBuilder()
-                      .RequireAuthenticatedUser()
-                      .Build();
-                    config.Filters.Add(new AuthorizeFilter(policy));
-                }).AddJsonOptions(options =>
+            services.AddMvc().AddJsonOptions(options =>
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
 
@@ -180,6 +176,9 @@ namespace AllReady
         public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, SampleDataGenerator sampleData, AllReadyContext context,
             IConfiguration configuration)
         {
+            // CORS support
+            app.UseCors("allReady");
+
             // todo: in RC update we can read from a logging.json config file
             loggerFactory.AddConsole((category, level) =>
             {
@@ -202,9 +201,6 @@ namespace AllReady
                     return true;
                 });
             }
-
-            // CORS support
-            app.UseCors("allReady");
 
             // Configure the HTTP request pipeline.
             var usCultureInfo = new CultureInfo("en-US");
